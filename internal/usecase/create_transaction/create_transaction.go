@@ -1,8 +1,8 @@
 package createtransaction
 
 import (
-	"github.com/clebersimm/fc-ms-wallet/gateway"
 	"github.com/clebersimm/fc-ms-wallet/internal/entity"
+	"github.com/clebersimm/fc-ms-wallet/internal/gateway"
 )
 
 type CreateTransactionInputDTO struct {
