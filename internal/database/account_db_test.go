@@ -42,13 +42,13 @@ func (s *AccountDBTestSuite) TestSave() {
 	s.Nil(err)
 }
 
-func (s *AccountDBTestSuite) TestGet() {
+func (s *AccountDBTestSuite) TestFindById() {
 	s.db.Exec("INSERT INTO clients (id, name , email, created_at) values (?,?,?,?)",
 		s.client.ID, s.client.Name, s.client.Name, s.client.CreatedAt)
 	account := entity.NewAccount(s.client)
 	err := s.accountDB.Save(account)
 	s.Nil(err)
-	accountDB, err := s.accountDB.Get(account.ID)
+	accountDB, err := s.accountDB.FindById(account.ID)
 	s.Nil(err)
 	s.Equal(account.ID, accountDB.ID)
 	s.Equal(account.Client.ID, accountDB.Client.ID)

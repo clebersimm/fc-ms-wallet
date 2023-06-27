@@ -16,7 +16,7 @@ func NewAccountDB(db *sql.DB) *AccountDB {
 	}
 }
 
-func (a *AccountDB) Get(id string) (*entity.Account, error) {
+func (a *AccountDB) FindById(id string) (*entity.Account, error) {
 	var account entity.Account
 	var client entity.Client
 	account.Client = &client
