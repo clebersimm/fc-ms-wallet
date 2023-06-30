@@ -1,16 +1,19 @@
 package events
 
-import "time"
+import (
+	"sync"
+	"time"
+)
 
 type EventInterface interface {
 	GetName() string
 	GetDateTime() time.Time
-	GetPayload() interface{} //emtpy interface to be anything
+	GetPayload() interface{}
 	SetPayload(payload interface{})
 }
 
 type EventHandlerInterface interface {
-	Handle(event EventInterface) //To execute the handler
+	Handle(event EventInterface, wg *sync.WaitGroup)
 }
 
 type EventDispatcherInterface interface {

@@ -1,12 +1,15 @@
 package events
 
-import "errors"
+import (
+	"errors"
+	"sync"
+)
+
+var ErrHandlerAlreadyRegistered = errors.New("handler already registered")
 
 type EventDispatcher struct {
 	handlers map[string][]EventHandlerInterface
 }
-
-var ErrHandlerAlreadyRegistred = errors.New("handler already registred")
 
 func NewEventDispatcher() *EventDispatcher {
 	return &EventDispatcher{
@@ -16,9 +19,12 @@ func NewEventDispatcher() *EventDispatcher {
 
 func (ev *EventDispatcher) Dispatch(event EventInterface) error {
 	if handlers, ok := ev.handlers[event.GetName()]; ok {
+		wg := &sync.WaitGroup{}
 		for _, handler := range handlers {
-			handler.Handle(event)
+			wg.Add(1)
+			go handler.Handle(event, wg)
 		}
+		wg.Wait()
 	}
 	return nil
 }
@@ -27,7 +33,7 @@ func (ed *EventDispatcher) Register(eventName string, handler EventHandlerInterf
 	if _, ok := ed.handlers[eventName]; ok {
 		for _, h := range ed.handlers[eventName] {
 			if h == handler {
-				return ErrHandlerAlreadyRegistred
+				return ErrHandlerAlreadyRegistered
 			}
 		}
 	}
